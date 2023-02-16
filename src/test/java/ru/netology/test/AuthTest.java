@@ -9,8 +9,7 @@ import org.junit.jupiter.api.Test;
 import java.time.Duration;
 
 
-import static com.codeborne.selenide.Condition.exactText;
-import static com.codeborne.selenide.Condition.text;
+import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
 import static ru.netology.testmode.data.DataGenerator.Registration.getRegisteredUser;
 import static ru.netology.testmode.data.DataGenerator.Registration.getUser;
@@ -32,7 +31,7 @@ class AuthTest {
         $("[data-test-id=login] input").setValue(registeredUser.getLogin());
         $("[data-test-id=password] input").setValue(registeredUser.getPassword());
         $(".button").click();
-        $("[id=root]").should(text("Личный кабинет"));
+        $$(".heading").findBy(text("Личный кабинет")).shouldBe(visible);
     }
 
     @Test
@@ -42,7 +41,8 @@ class AuthTest {
         $("[data-test-id=login] input").setValue(notRegisteredUser.getLogin());
         $("[data-test-id=password] input").setValue(notRegisteredUser.getPassword());
         $("[data-test-id=action-login]").click();
-        $(".notification__content").should(exactText("Ошибка! Неверно указан логин или пароль"));
+        $("[data-test-id='error-notification'] .notification__title").shouldBe(visible, exactText("Ошибка"));
+        $("[data-test-id='error-notification'] .notification__content").shouldBe(visible,exactText("Ошибка! Неверно указан логин или пароль"));
     }
 
     @Test
